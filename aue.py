@@ -9,16 +9,12 @@ image = Image.open("lena.bmp")
 image.load()
 im = asarray(image, dtype="B")
 
-im = im / 256
+i = im / 256
 
 
 model = Sequential()
-model.add(Conv2D(3, 3, strides=1, activation="sigmoid", input_shape=(None, None, 3)))
-model.add(Conv2D(6, 3, strides=1, activation="sigmoid", input_shape=(None, None, 3)))
-model.add(Conv2D(3, 3, strides=1, activation="sigmoid", input_shape=(None, None, 3)))
-model.add(Conv2DTranspose(3, 3, strides=1, activation="sigmoid", input_shape=(None, None, 3)))
-model.add(Conv2DTranspose(6, 3, strides=1, activation="sigmoid", input_shape=(None, None, 3)))
-model.add(Conv2DTranspose(3, 3, strides=1, activation="sigmoid", input_shape=(None, None, 3)))
+model.add(Conv2D(6, 4, strides=4, activation="sigmoid", input_shape=(None, None, 3)))
+model.add(Conv2DTranspose(3, 4, strides=4, activation="sigmoid"))
 
 model.compile(optimizer='sgd',
               loss='mean_squared_error',
@@ -29,18 +25,19 @@ model.compile(optimizer='sgd',
 
 
 # data = rand(100, 10, 10, 3)
-data = array([im for _ in range(200)])
+data = array([i for _ in range(200)])
 
-model.fit(data, data, batch_size=40, epochs=10)
-# model.save("decodercutie.model")
+model.fit(data, data, batch_size=1, epochs=40)
+model.save("decodercutie.model")
 
 # model = load_model("decodercutie.model")
-encoded = model.predict(array([im]))
+encoded = model.predict(array([i]))
 
+print(encoded)
 
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
-ax1.imshow(im * 256)
+ax1.imshow(im)
 ax2.imshow(encoded[0] * 256)
 
 plt.show()
