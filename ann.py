@@ -1,0 +1,46 @@
+from keras.layers import Input, Dense
+from keras.models import Model, Sequential
+from numpy import array, append
+
+
+model = Sequential()
+model.add(Dense(3, input_dim=3))
+model.add(Dense(3, activation='relu'))
+model.add(Dense(1, activation='relu'))
+
+
+model.compile(optimizer='rmsprop',
+              loss='mean_squared_error',
+              metrics=['accuracy'])
+
+
+
+
+"""
+The first value will indicate what operation it is
+
+0: AND
+1: OR
+2: XOR
+
+The other two are boolean values
+
+"""
+
+and_data = array([[0, 1, 1], [0, 1, 0], [0, 0, 0], [0, 0, 1]])
+and_labels = array([[1], [0], [0], [0]])
+
+or_data = array([[1, 1, 1], [1, 1, 0], [1, 0, 0], [1, 0, 1]])
+or_labels = array([[1], [1], [0], [1]])
+
+xor_data = array([[2, 1, 1], [2, 1, 0], [2, 0, 0], [2, 0, 1]])
+xor_labels = array([[0], [1], [0], [1]])
+
+data = append(append(and_data, or_data, axis=0), xor_data, axis=0)
+labels = append(append(and_labels, or_labels, axis=0), xor_labels, axis=0)
+
+
+model.fit(data, labels, epochs=1000)  # starts training
+
+
+print(model.predict(and_data))
